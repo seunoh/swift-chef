@@ -1,0 +1,19 @@
+#!/bin/bash
+
+dirs=0
+target_count=<%= node[:cloudfiles][:mounted_drives] %>
+names=""
+
+for d in `find <%= node[:cloudfiles][:mount_path] %> -type d` ; do
+  mountpoint -q $d
+  if [ $? ] ; then
+    let dirs=dirs+1
+    names="$names $d"
+  fi
+done
+
+if [ $dirs -lt $target_count ] ; then
+  echo "Mount Mismatch!"
+  echo "Expected $target_count mounted drives, but only got $dirs"
+  echo "LIST: $names"
+fi

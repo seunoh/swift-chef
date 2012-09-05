@@ -1,0 +1,26 @@
+[DEFAULT]
+devices = /srv/<%= @server_num %>/node
+mount_check = false
+disable_fallocate = true
+bind_port = 60<%= @server_num %>1
+user = <%= node[:cloudfiles][:user] %>
+log_facility = LOG_LOCAL<%= @server_num %>
+recon_cache_path = /var/cache/swift<%= @server_num %>
+
+[pipeline:main]
+pipeline = recon container-server
+
+[app:container-server]
+use = egg:swift#container
+
+[filter:recon]
+use = egg:swift#recon
+
+[container-replicator]
+vm_test_mode = yes
+
+[container-updater]
+
+[container-auditor]
+
+[container-sync]

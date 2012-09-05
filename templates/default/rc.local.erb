@@ -1,0 +1,6 @@
+mkdir -p /var/cache/swift1 /var/cache/swift2 /var/cache/swift3 /var/cache/swift4
+chown <%=node[:cloudfiles][:user]%>:<%=node[:cloudfiles][:group]%> /var/cache/swift*
+mkdir -p /var/run/swift
+chown <%=node[:cloudfiles][:user]%>:<%=node[:cloudfiles][:group]%> /var/run/swift
+
+exit 0
