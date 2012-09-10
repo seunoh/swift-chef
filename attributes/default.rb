@@ -6,6 +6,8 @@ default[:storage][:mounted_drives] = "7"
 
 
 
+default[:storage][:proxy][:user] = "root"
+default[:storage][:proxy][:passwd] = "0"
 default[:storage][:proxy][:ip] = "192.168.1.111"
 
 default[:storage][:account][:ip] = [

@@ -14,6 +14,7 @@ template "/etc/swift/swift.conf" do
   source "swift.conf.erb"
   owner node[:storage][:user]
   group node[:storage][:group]
+  mode "0755"
 end
 
 

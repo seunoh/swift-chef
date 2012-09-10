@@ -1,7 +1,7 @@
-incpude_recipe "swift-chef::default"
+include_recipe "swift-chef"
 
 
-App="account"
+App="object"
 
 
 %w{swift-account xfsprogs}.each do |pkg|
@@ -46,16 +46,12 @@ execute "mount /mnt/sdb1" do
   not_if "df | grep /dev/loop0"
 end
 
-template "/etc/rc.local" do
-  source "rc.local.erb"
-end
-
 template "/etc/rsyncd.conf" do
   source "rsyncd.conf.erb"
   owner node[:storage][:user]
   group node[:storage][:group]
   variables (
-    :content_name => {App}
+    { :content_name => App }
   )
 end
 
@@ -72,8 +68,17 @@ template "/etc/swift/#{App}-server.conf" do
   source "#{App}-server.conf.erb"
   owner node[:storage][:user]
   group node[:storage][:group]
+  mode "0755"
 end
 
+passwd = "#{node[:storage][:proxy][:passwd]}"
+user = "#{node[:storage][:proxy][:user]}"
+ip = "#{node[:storage][:proxy][:ip]}"
 
-execute "swift-init #{App} start"
+execute "ring copy" do
+  command "sshpass -p #{passwd} scp -oStrictHostKeyChecking=no #{user}@#{ip}:/etc/swift/*.ring.gz /etc/swift"
+  cwd "/etc/swift"
+end
+
+execute "swift-init #{App} start" do
 end
